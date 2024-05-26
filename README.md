@@ -1,7 +1,7 @@
 # Sulfur Engine 0.1
 
 ## About
-Sulfur is a cross-platoform open-sourced 2D game engine that uses the swing graphics library, created in spite of Unitys Runtime Fee
+Sulfur is a cross-platoform open-sourced 2D game engine that uses the swing graphics library.
 
 ## Features
 
