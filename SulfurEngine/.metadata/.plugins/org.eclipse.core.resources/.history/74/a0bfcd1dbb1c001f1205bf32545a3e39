@@ -1,0 +1,26 @@
+package com.sulfurengine.renderer;
+
+import java.awt.Graphics2D;
+
+import com.sulfurengine.ecs.Script;
+
+public class LineRenderer extends Script{
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void render(Graphics2D g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

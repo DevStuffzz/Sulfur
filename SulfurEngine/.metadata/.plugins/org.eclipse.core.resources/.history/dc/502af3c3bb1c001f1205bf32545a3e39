@@ -1,0 +1,19 @@
+package com.sulfurengine.behaviorscripts;
+
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.renderer.LineRenderer;
+
+public class LineBetween extends Script {
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		LineRenderer lr = parent.getScript(LineRenderer.class);
+	}
+
+}

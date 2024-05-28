@@ -1,0 +1,82 @@
+import java.awt.Color;
+
+import com.sulfurengine.behaviorscripts.AudioClip;
+import com.sulfurengine.behaviorscripts.BoxCollider;
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.io.Scene;
+import com.sulfurengine.io.SceneManager;
+import com.sulfurengine.renderer.Sprite;
+import com.sulfurengine.renderer.TextRenderer;
+import com.sulfurengine.ui.SceneSwitchingButton;
+import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Vec2;
+
+public class Main {
+	public static void main(String[] args) {
+		Debug.DEBUG = true;
+		Display display = Display.get();
+		display.init(800, 600, "Just Keep Swimming");		
+		
+		SceneManager.AddScene(gameScene());
+		SceneManager.AddScene(gameOverScene());
+		SceneManager.SetScene(0);
+		
+		while(Display.open()) {
+			display.update();
+		}
+		
+		display.close();
+	}
+	
+	private static Scene gameScene() {
+		Scene scene = new Scene();
+		scene.background = new Spriterenderer(new Sprite("assets/level.jpg"));
+		scene.start();
+		
+		Entity player = new Entity("Player", new Transform(
+				new Vec2(800 / 2, 600 / 2), new Vec2(100, 100)));
+		
+		player.addScript(new Spriterenderer(new Sprite("assets/player.png")));
+		player.addScript(new PlayerMovement());
+		player.addScript(new BoxCollider());
+		player.addScript(new PlayerManager());
+		
+		Entity spawnerEntity = new Entity("Spawner", new Transform());
+		spawnerEntity.addScript(new ProjectileSpawner());
+		
+		Entity theme = new Entity("Theme", new Transform());
+		theme.addScript(new AudioClip("assets/theme.wav", true));
+		
+		scene.addEntity(spawnerEntity);
+		scene.addEntity(player);
+		scene.addEntity(theme);
+		return scene;
+	}
+	
+	private static Scene gameOverScene() {
+		Scene scene = new Scene();
+		scene.background = new Spriterenderer(new Sprite("assets/gameover.jpg"));
+		
+		Entity button = new Entity("Button", new Transform(
+				new Vec2(800 / 2, 400), new Vec2(200, 100)));
+		button.addScript(new Spriterenderer(new Sprite("assets/playagainbutton.png")));
+		button.addScript(new SceneSwitchingButton(0));
+		
+		Entity theme = new Entity("Theme-Lose", new Transform());
+		theme.addScript(new AudioClip("assets/lose.wav", true));
+		
+		Entity score = new Entity("Score", new Transform(new Vec2(400, 100), new Vec2()));
+		score.addScript(new TextRenderer(""));
+		score.addScript(new UIPoints());
+		
+		
+		scene.addEntity(button);
+		scene.addEntity(theme);
+		scene.addEntity(score);
+		
+		return scene;
+	}
+}

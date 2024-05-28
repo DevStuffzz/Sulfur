@@ -1,0 +1,45 @@
+
+import java.awt.Color;
+
+import com.sulfurengine.behaviorscripts.AudioClip;
+import com.sulfurengine.behaviorscripts.BoxCollider;
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.io.Scene;
+import com.sulfurengine.io.SceneManager;
+import com.sulfurengine.renderer.Sprite;
+import com.sulfurengine.renderer.TextRenderer;
+import com.sulfurengine.ui.SceneSwitchingButton;
+import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Vec2;
+
+public class Main {
+	public static void main(String[] args) {
+		Display display = Display.get();
+		display.init(800, 600, "Sulfur Engine");		
+		
+		SceneManager.AddScene(gameScene());
+		SceneManager.SetScene(0);
+		
+		while(Display.open()) {
+			display.update();
+		}
+		
+		display.close();
+	}
+	
+	private static Scene gameScene() {
+		Scene scene = new Scene();
+		scene.background = new Spriterenderer(Color.black);
+		scene.start();
+		
+		Entity player = new Entity("Player", new Transform(
+				new Vec2(400, 300), new Vec2(100, 100)));
+		player.addScript(new PlayerMovement());
+		player.addScript(new Spriterenderer(Color.cyan));
+	
+		return scene;
+	}
+}

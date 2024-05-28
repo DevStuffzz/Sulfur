@@ -1,0 +1,7 @@
+package com.sulfurengine;
+
+public abstract class Script {
+	public Entity parent;
+	public abstract void start();
+	public abstract void update(float dt);
+}

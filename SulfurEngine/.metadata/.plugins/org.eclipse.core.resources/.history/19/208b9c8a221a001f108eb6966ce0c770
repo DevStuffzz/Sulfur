@@ -1,0 +1,68 @@
+package com.sulfurengine.renderer;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JPanel;
+
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Vec2i;
+
+public class Renderer extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	
+
+	private Display display;
+	public Renderer() {
+		display = Display.get();
+		
+		this.setBounds(0, 0, display.width(), display.height());
+		this.setDoubleBuffered(true);
+		
+		 // Additional repaint triggers
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                repaint();
+            }
+        });
+	}
+	
+	@Override
+	public void paint(Graphics grap) {
+		super.paint(grap);
+		
+		Graphics2D g = (Graphics2D)grap;
+		
+		if(Debug.DEBUG) {			
+			g.setColor(Color.red);
+			for(Entity e : display.getScene().getAllEntities()) {	
+				Transform t = e.transform;
+				Vec2i pos = Vec2i.convert(t.pos);
+				Vec2i scale = Vec2i.convert(t.scale);
+				g.fillRect(pos.x, pos.y, scale.x, scale.y);
+			}
+		} else {
+			for(Spriterenderer sprite : display.getScene().getAllSprites()) {
+				Transform t = sprite.parent.transform;
+				Vec2i pos = Vec2i.convert(t.pos);
+				Vec2i scale = Vec2i.convert(t.scale);
+				
+				if(sprite.colored()) {
+					g.setColor(sprite.getColor());
+					g.fillRect(pos.x, pos.y, scale.x, scale.y);
+				} else {
+	                Image img = sprite.getSprite().getImage();
+	                BufferedImage bf = (BufferedImage) img;
+	                g.drawImage(bf, pos.x, pos.y, scale.x, scale.y, this);
+				}
+			}
+		}
+	}
+}

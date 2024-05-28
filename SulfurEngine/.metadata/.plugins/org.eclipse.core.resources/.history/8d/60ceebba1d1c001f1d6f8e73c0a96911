@@ -1,0 +1,18 @@
+package com.sulfurengine.util;
+
+public class Vec2i {
+public int x, y;
+	
+	public Vec2i() {
+		this(0, 0);
+	}
+	
+	public Vec2i(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public static Vec2i convert(Vec2 vec) {
+		return new Vec2i((int)vec.x, (int)vec.y);
+	}
+}

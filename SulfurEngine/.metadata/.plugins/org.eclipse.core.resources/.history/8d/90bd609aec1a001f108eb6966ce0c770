@@ -1,0 +1,35 @@
+package com.sulfurengine.ui;
+
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.io.Input;
+
+public class SceneSwitchingButton extends Script {
+
+	private int sceneToSwitch = 0;
+	
+	public SceneSwitchingButton(int scene) {
+		scentToSwitch = scene;
+	}
+	
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		Rectangle rect = parent.bounds();
+		Point mouse = Input.getMousePosition();
+		
+		if(rect.contains(mouse)) {
+			if(Input.isMouseButtonDown(MouseEvent.BUTTON1)) {
+				
+			}
+		}
+	}
+}

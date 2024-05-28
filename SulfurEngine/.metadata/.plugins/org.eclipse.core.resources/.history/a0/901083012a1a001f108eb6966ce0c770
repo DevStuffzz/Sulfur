@@ -1,0 +1,70 @@
+package com.sulfurengine.io;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+
+public class Scene {
+	private List<Entity> entities;
+	
+	private boolean running = false;
+	
+	public Spriterenderer background = new Spriterenderer(Color.black);
+	
+	public Scene() {
+		entities = new ArrayList<>();
+	}
+	
+	public void start() {
+		for(Entity e : entities) {
+			e.start();
+		}
+		running = true;
+	}
+	
+	public void instantiate(Entity e) {
+		this.entities.add(e);
+		if(running) {
+			e.start();
+		}
+	}
+	
+	public Entity getEntity(int index) {
+		if(index > entities.size()) return null;
+		return this.entities.get(index);
+	}
+	
+	public List<Entity> getAllEntities() {
+		return this.entities;
+	}
+	
+	public List<Spriterenderer> getAllSprites() {
+		List<Spriterenderer> sprites = new ArrayList<>();
+		
+		for(Entity e : this.entities) {
+			Spriterenderer sr = e.getScript(Spriterenderer.class);
+			if(sr != null) {
+				sprites.add(sr);
+			}
+		}
+		
+		return sprites;
+	}
+	
+	public void update(float dt) {
+		Iterator<Entity> iterator = entities.iterator();
+	    while (iterator.hasNext()) {
+	        Entity e = iterator.next();
+	        e.update(dt);
+	    }
+	}
+
+	public void destroy(Entity e) {
+		entities.remove(e);
+	}
+}
+ 

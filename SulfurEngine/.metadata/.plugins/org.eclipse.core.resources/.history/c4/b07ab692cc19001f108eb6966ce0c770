@@ -1,0 +1,21 @@
+package com.sulfurengine;
+
+public class Debug {
+	public static boolean DEBUG = false;
+	
+	public static void Log(String s) {
+		System.out.println(s);
+	}
+	
+	public static void Logf(String format, Object ...args) {
+		System.out.printf(format, args);
+	}
+	
+	public static void LogError(String s) {
+		System.err.println(s);
+	}
+	
+	public static void LogErrorf(String format, Object ...args) {
+		System.err.printf(format, args);
+	}
+}

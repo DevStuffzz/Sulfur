@@ -1,0 +1,5 @@
+package com.sulfurengine.renderer;
+
+public class Animator {
+	private Map<String, Sprite> animations;
+}

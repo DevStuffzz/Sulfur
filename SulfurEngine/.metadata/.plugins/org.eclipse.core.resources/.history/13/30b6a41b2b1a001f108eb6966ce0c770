@@ -1,0 +1,79 @@
+package com.sulfurengine.io;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+
+public class Scene {
+	private List<Entity> entities;
+    private Queue<Entity> entitiesToAdd;
+
+	
+	private boolean running = false;
+	
+	public Spriterenderer background = new Spriterenderer(Color.black);
+	
+	public Scene() {
+		entities = new ArrayList<>();
+		entitiesToAdd = new LinkedList<>();
+	}
+	
+	public void start() {
+		for(Entity e : entities) {
+			e.start();
+		}
+		running = true;
+	}
+	
+	public void instantiate(Entity e) {
+		this.entities.add(e);
+		if(running) {
+			e.start();
+		}
+		
+		
+	}
+	
+	public Entity getEntity(int index) {
+		if(index > entities.size()) return null;
+		return this.entities.get(index);
+	}
+	
+	public List<Entity> getAllEntities() {
+		return this.entities;
+	}
+	
+	public List<Spriterenderer> getAllSprites() {
+		List<Spriterenderer> sprites = new ArrayList<>();
+		
+		for(Entity e : this.entities) {
+			Spriterenderer sr = e.getScript(Spriterenderer.class);
+			if(sr != null) {
+				sprites.add(sr);
+			}
+		}
+		
+		return sprites;
+	}
+	
+	public void update(float dt) {
+		for(Entity e : entities) {
+			e.update(dt);
+		}
+		
+		// Add entities queued for addition
+        while (!entitiesToAdd.isEmpty()) {
+            entities.add(entitiesToAdd.poll());
+        }
+	}
+
+	public void destroy(Entity e) {
+		entitiesToAdd.offer(e);
+	}
+}
+ 

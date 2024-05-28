@@ -1,0 +1,17 @@
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.io.Input;
+
+public class SceneSwitcher extends Script {
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		
+	}
+
+}

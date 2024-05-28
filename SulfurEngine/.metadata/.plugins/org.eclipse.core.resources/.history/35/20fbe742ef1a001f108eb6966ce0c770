@@ -1,0 +1,5 @@
+import com.sulfurengine.ecs.Script;
+
+public class SceneSwitcher extends Script {
+
+}

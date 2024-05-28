@@ -1,0 +1,5 @@
+package com.sulfurengine.util;
+
+public class Prefabs {
+	public static Entity ImageEntity()
+}

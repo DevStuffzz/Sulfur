@@ -1,0 +1,13 @@
+package com.sulfurengine;
+
+public class Debug {
+	public static boolean DEBUG = false;
+	
+	public static void Log(String s) {
+		
+	}
+	
+	public static void LogError(String s) {
+		
+	}
+}

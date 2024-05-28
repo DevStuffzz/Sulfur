@@ -1,0 +1,17 @@
+package com.sulfurengine.renderer;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Sprite {
+	private Image image;
+	
+	public Sprite(String loc) {
+		this.image = new ImageIcon(loc).getImage();
+	}
+	
+	public Image getImage() {
+		
+	}
+}

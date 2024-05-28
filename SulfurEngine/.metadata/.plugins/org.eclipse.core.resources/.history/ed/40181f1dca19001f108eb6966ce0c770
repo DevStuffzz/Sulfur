@@ -1,0 +1,17 @@
+import com.sulfurengine.Input;
+import com.sulfurengine.Script;
+
+public class PlayerMovement extends Script {
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		float x = Input.getAxisHorizontal();
+	}
+
+}

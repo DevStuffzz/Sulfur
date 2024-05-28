@@ -1,0 +1,62 @@
+package com.sulfurengine.behaviorscripts;
+
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BoxCollider extends Script {
+    private List<Entity> collidingEntities;
+
+    @Override
+    public void start() {
+        collidingEntities = new ArrayList<>();
+    }
+
+    @Override
+    public void update(float dt) {
+        // Clear the list of colliding entities before performing collision detection
+        collidingEntities.clear();
+        
+        // Collision detection logic
+        checkCollisions();
+    }
+
+    private void checkCollisions() {
+        List<Entity> entities = Display.currentScene.getEntities(); // Get all entities in the scene
+        
+        for (Entity entity : entities) {
+            if (entity != parent) { // Avoid self-collision
+                // Get the Transform component of the other entity
+                Transform otherTransform = entity.transform;
+                
+                if (otherTransform != null) { // Ensure the other entity has a Transform component
+                    // Check for collision with the other entity's position
+                    if (isColliding(otherTransform)) {
+                        // Collision detected, add the colliding entity to the list
+                        collidingEntities.add(entity);
+                        
+                        // Optionally, handle collision with the other entity
+                        handleCollision(entity);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isColliding(Transform otherTransform) {
+        // Similar collision detection logic as before
+    }
+
+    private void handleCollision(Entity otherEntity) {
+        // Handle collision with the other entity
+    }
+
+    // Getter method to retrieve the list of colliding entities
+    public List<Entity> getCollidingEntities() {
+        return collidingEntities;
+    }
+}

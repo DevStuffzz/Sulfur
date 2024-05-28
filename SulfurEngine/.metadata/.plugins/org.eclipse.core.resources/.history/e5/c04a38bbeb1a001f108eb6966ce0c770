@@ -1,0 +1,16 @@
+package com.sulfurengine.ui;
+
+public class Button extends UIComponent {
+
+	
+	@Override 
+	public void uiUpdate(float dt) {
+		
+	}
+	
+	@Override
+	public void OnInteraction() {
+		
+	}
+
+}

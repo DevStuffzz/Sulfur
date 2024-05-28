@@ -1,0 +1,7 @@
+package com.sulfurengine;
+
+public class Entity {
+	public String name;
+	
+	private List<Entity>() entities;
+}

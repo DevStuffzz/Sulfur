@@ -1,25 +1,31 @@
 
+import java.awt.Color;
+import java.awt.Font;
+
 import com.sulfurengine.behaviorscripts.AudioClip;
 import com.sulfurengine.behaviorscripts.BoxCollider;
+import com.sulfurengine.behaviorscripts.LineBetween;
 import com.sulfurengine.behaviorscripts.Spriterenderer;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Transform;
 import com.sulfurengine.io.Display;
 import com.sulfurengine.io.Scene;
 import com.sulfurengine.io.SceneManager;
+import com.sulfurengine.renderer.Animator;
+import com.sulfurengine.renderer.LineRenderer;
 import com.sulfurengine.renderer.Sprite;
 import com.sulfurengine.renderer.TextRenderer;
-import com.sulfurengine.ui.SceneSwitchingButton;
+import com.sulfurengine.ui.UiComponent;
 import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Prefabs;
 import com.sulfurengine.util.Vec2;
 
 public class Main {
 	public static void main(String[] args) {
 		Display display = Display.get();
-		display.init(800, 600, "Just Keep Swimming");		
+		display.init(800, 600, "Sulfur Engine");		
 		
 		SceneManager.AddScene(gameScene());
-		SceneManager.AddScene(gameOverScene());
 		SceneManager.SetScene(0);
 		
 		while(Display.open()) {
@@ -31,51 +37,51 @@ public class Main {
 	
 	private static Scene gameScene() {
 		Scene scene = new Scene();
-		scene.background = new Spriterenderer(new Sprite("/resources/assets/level.jpg"));
+		scene.background = new Spriterenderer(Color.WHITE);
 		scene.start();
 		
+		Entity bg = Prefabs.ImageEntity(new Sprite("/resources/assets/backgroundtest.jpg"));
+		bg.transform.scale = new Vec2(2000, 2000);
+		
 		Entity player = new Entity("Player", new Transform(
-				new Vec2(800 / 2, 600 / 2), new Vec2(100, 100)));
-		
-		player.addScript(new Spriterenderer(new Sprite("/resources/assets/player.png")));
+				new Vec2(400, 300), new Vec2(100, 100)));
 		player.addScript(new PlayerMovement());
-		player.addScript(new BoxCollider());
-		player.addScript(new PlayerManager());
+		player.addScript(new Spriterenderer(Color.cyan));
 		
-		Entity spawnerEntity = new Entity("Spawner", new Transform());
-		spawnerEntity.addScript(new ProjectileSpawner());
+		Animator playerAnim = new Animator();
+		playerAnim.addAnim("idle", new Sprite("/resources/assets/idle.gif"));
+		playerAnim.addAnim("walk", new Sprite("/resources/assets/walk.gif"));
 		
-		Entity theme = new Entity("Theme", new Transform());
-		theme.addScript(new AudioClip("/resources/assets/theme.wav", true));
+		player.addScript(playerAnim);
 		
-		Entity score = new Entity("Score", new Transform(new Vec2(400, 100), new Vec2()));
-		score.addScript(new TextRenderer(""));
-		score.addScript(new UIPoints());
+		Entity redCube = new Entity("RedCube", new Transform(
+				new Vec2(100, 100), new Vec2(100, 100)));
 		
+		redCube.addScript(new Spriterenderer(Color.red));
+		redCube.addScript(new Rotator());
+	
+		Entity text_default = Prefabs.TextEntity("Default Font", TextRenderer.DEFAULT_FONT);
+		text_default.transform.pos = new Vec2(200, 200);
 		
-		scene.addEntity(spawnerEntity);
+		Entity text_custom = Prefabs.TextEntity("Custom Text", new Font("Monospaced", Font.PLAIN, 19));
+		text_custom.transform.pos = new Vec2(200, 400);
+		
+		Entity ui_text = Prefabs.TextEntity("UI Text", new Font("TimesRoman", Font.PLAIN, 19));
+		ui_text.transform.pos = new Vec2(400, 200);
+		ui_text.addScript(new UiComponent());
+		
+		Entity line = new Entity("line", new Transform());
+		line.addScript(new LineRenderer(new Vec2(100, 100), new Vec2(100, 200)));
+		line.addScript(new LineBetween(player, redCube));
+
+		scene.addEntity(bg);
 		scene.addEntity(player);
-		scene.addEntity(theme);
-		scene.addEntity(score);
-		return scene;
-	}
-	
-	private static Scene gameOverScene() {
-		Scene scene = new Scene();
-		scene.background = new Spriterenderer(new Sprite("/resources/assets/gameover.jpg"));
-		
-		Entity button = new Entity("Button", new Transform(
-				new Vec2(800 / 2, 400), new Vec2(200, 100)));
-		button.addScript(new Spriterenderer(new Sprite("/resources/assets/playagainbutton.png")));
-		button.addScript(new SceneSwitchingButton(0));
-		
-		Entity theme = new Entity("Theme-Lose", new Transform());
-		theme.addScript(new AudioClip("/resources/assets/lose.wav", true));
-		
-	
-		
-		scene.addEntity(button);
-		scene.addEntity(theme);
+		scene.addEntity(redCube);
+		scene.addEntity(text_default);
+		scene.addEntity(text_custom);
+		scene.addEntity(ui_text);
+		scene.addEntity(line);
+
 		
 		return scene;
 	}

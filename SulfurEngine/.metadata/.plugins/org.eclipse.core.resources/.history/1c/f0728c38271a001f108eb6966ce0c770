@@ -1,0 +1,23 @@
+
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.util.Vec2;
+
+public class Projectile extends Script{
+	private Vec2 direction;
+	private float speed = 250.0f;
+	
+	public Projectile(float x, float y) {
+		direction = new Vec2(x, y);
+	}
+	@Override
+	public void start() {
+		
+	}
+	@Override
+	public void update(float dt) {
+		float x = direction.x * speed * dt;
+		float y = direction.y * speed * dt;
+		
+		parent.transform.pos.add(direction);
+	}
+}

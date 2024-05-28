@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import com.sulfurengine.renderer.DirtyFlag;
 import com.sulfurengine.renderer.Renderer;
+import com.sulfurengine.util.Debug;
 
 public class Display {
 	private int width, height;
@@ -18,6 +19,7 @@ public class Display {
 	private JFrame frame;
 	private Renderer renderer;
 	public static Scene currentScene = new Scene();
+	
 	
 	private Display() {};
 	
@@ -38,9 +40,8 @@ public class Display {
 		frame = new JFrame(title);
 		frame.setSize(width, height);
 		
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setDefaultLookAndFeelDecorated(true);
 		
 		Input.initialize(frame);
 		
@@ -50,7 +51,6 @@ public class Display {
 	                Dimension newSize = frame.getSize();
 	                width = newSize.width;
 	                height = newSize.height;
-	                // Add your resize event handling code here
 	            }
 	        });		
 		renderer = new Renderer();
@@ -65,7 +65,7 @@ public class Display {
 	    float dt = 0.0f; // Initialize delta time to zero
 
 	    if(currentScene == null) {
-	    	System.err.println("Tried to update a null scene");
+	    	Debug.LogError("Tried to update a null scene");
 	    	close();
 	    }
 	    
@@ -79,10 +79,7 @@ public class Display {
 	    if(dt > 0) {
 	        // Call scene update and render
 	        currentScene.update(dt);
-	        if(DirtyFlag.dirty) {
-	        	renderer.repaint();
-	        	DirtyFlag.dirty = false;
-	        }
+	        renderer.repaint();
 	    }
 	}
 
@@ -95,6 +92,16 @@ public class Display {
 		return height;
 	}
 
+	public static String title(String title) {
+		get().title = title;
+		get().frame.setTitle(title);
+		return title();
+	}
+	
+	public static String title() {
+		return get().title;
+	}
+	
 	public static boolean open() {
 		return !Input.isKeyDown(KeyEvent.VK_ESCAPE);
 	}

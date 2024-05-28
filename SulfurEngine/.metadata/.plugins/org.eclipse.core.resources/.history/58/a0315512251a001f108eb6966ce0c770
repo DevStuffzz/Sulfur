@@ -1,0 +1,83 @@
+package com.sulfurengine.renderer;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JPanel;
+
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Vec2;
+import com.sulfurengine.util.Vec2i;
+
+public class Renderer extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	
+
+	private Display display;
+	public Renderer() {
+		display = Display.get();
+		
+		this.setBounds(0, 0, display.width(), display.height());
+		this.setDoubleBuffered(true);
+		
+		 // Additional repaint triggers
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                repaint();
+            }
+        });
+	}
+	
+	@Override
+	public void paint(Graphics grap) {
+		super.paint(grap);
+		
+		Graphics2D g = (Graphics2D)grap;
+		
+		
+		Transform t = new Transform(new Vec2(0, 0), new Vec2(display.width(), display.height()));
+		Vec2i pos = Vec2i.convert(t.pos);
+		Vec2i scale = Vec2i.convert(t.scale);
+		
+		Spriterenderer background = display.getScene().background;
+		if(background.colored()) {
+			g.setColor(background.getColor());
+			g.fillRect(pos.x, pos.y, scale.x, scale.y);
+		} else {
+            Image img = background.getSprite().getImage();
+            g.drawImage(img, pos.x, pos.y, scale.x, scale.y, this);
+		}
+		
+		if(Debug.DEBUG) {			
+			g.setColor(Color.red);
+			for(Entity e : display.getScene().getAllEntities()) {	
+				Transform tr = e.transform;
+				Vec2i p = Vec2i.convert(tr.pos);
+				Vec2i s = Vec2i.convert(tr.scale);
+				g.fillRect(p.x, p.y, s.x, s.y);
+			}
+		} else {
+			for(Spriterenderer sprite : display.getScene().getAllSprites()) {
+				Transform t1 = sprite.parent.transform;
+				Vec2i p = Vec2i.convert(t1.pos);
+				Vec2i s = Vec2i.convert(t1.scale);
+				
+				if(sprite.colored()) {
+					g.setColor(sprite.getColor());
+					g.fillRect(p.x, p.y, s.x, s.y);
+				} else {
+	                Image img = sprite.getSprite().getImage();
+	                g.drawImage(img, p.x, p.y, s.x, s.y, this);
+				}
+			}
+		}
+	}
+}

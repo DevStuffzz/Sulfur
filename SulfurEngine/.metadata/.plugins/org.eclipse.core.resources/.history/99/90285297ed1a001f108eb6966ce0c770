@@ -1,0 +1,5 @@
+package com.sulfurengine.renderer;
+
+public class TextRenderer extends Script {
+	String text = "Hello World";
+}

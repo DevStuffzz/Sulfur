@@ -1,0 +1,29 @@
+package com.sulfurengine.ui;
+
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.ecs.Transform;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.util.Vec2;
+
+public class UiComponent extends Script {
+
+    private Vec2 screenPosition; // Desired position in screen space
+
+    public UiComponent() {
+    }
+
+    @Override
+    public void start() {
+        this.screenPosition = parent.transform.pos;
+    }
+
+    @Override
+    public void update(float dt) {
+        // Get the current camera position
+        Vec2 cameraPos = Display.currentScene.camera.getPosition();
+
+        // Adjust the parent's transform position to keep it fixed on screen space
+        // We want the parent to stay at screenPosition regardless of the camera's movement
+        parent.transform.pos = new Vec2(cameraPos.x + screenPosition.x, cameraPos.y + screenPosition.y);
+    }
+}

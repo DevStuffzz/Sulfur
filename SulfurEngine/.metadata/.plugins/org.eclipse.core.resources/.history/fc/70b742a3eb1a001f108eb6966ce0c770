@@ -1,0 +1,20 @@
+package com.sulfurengine.ui;
+
+import com.sulfurengine.ecs.Script;
+
+public abstract class UIComponent extends Script {
+
+	@Override
+	public void start() {}
+
+	@Override
+	public void update(float dt) {
+		uiUpdate(dt);
+	}
+	
+	public void uiUpdate(float dt) {
+		
+	}
+	
+	public abstract void OnInteraction();
+}

@@ -1,0 +1,18 @@
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.renderer.TextRenderer;
+
+public class UIPoints extends Script {
+	private TextRenderer tr;
+	public static float points = 0;
+	@Override
+	public void start() {
+		points = 0;
+	}
+
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

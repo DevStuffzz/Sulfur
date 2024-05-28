@@ -1,0 +1,7 @@
+package com.sulfurengine.io;
+
+import java.util.List;
+
+public class SceneManager {
+	private List<Scene> scenes;
+}

@@ -1,0 +1,34 @@
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.io.Input;
+import com.sulfurengine.renderer.DirtyFlag;
+
+public class PlayerMovement extends Script {
+
+	public float speed = 200;
+	
+	@Override
+	public void start() {		
+	}
+
+	@Override
+	public void update(float dt) {
+		float x = Input.getAxisHorizontal() * speed * dt;
+		float y = Input.getAxisVertical() * speed * dt;
+		
+		parent.transform.pos.add(x, y);
+		
+		Spriterenderer spr = parent.getScript(Spriterenderer.class);
+		if(spr != null) {
+		    if (x > 0) {
+	            spr.flipX = true; 
+	        } else if (x < 0) {
+	            spr.flipX = false; 
+	        }		
+		}
+		
+		if(x != 0 || y != 0) DirtyFlag.dirty = true;
+		
+	}
+
+}

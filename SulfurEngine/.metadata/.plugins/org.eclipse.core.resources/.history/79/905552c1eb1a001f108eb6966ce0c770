@@ -1,0 +1,7 @@
+package com.sulfurengine.ui;
+
+public class Button extends Script {
+
+	
+	
+}

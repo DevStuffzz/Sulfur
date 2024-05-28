@@ -9,20 +9,25 @@ import java.util.Queue;
 
 import com.sulfurengine.behaviorscripts.Spriterenderer;
 import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.renderer.Camera;
 import com.sulfurengine.renderer.DirtyFlag;
+import com.sulfurengine.renderer.LineRenderer;
 import com.sulfurengine.renderer.TextRenderer;
+import com.sulfurengine.util.Vec2;
 
 public class Scene {
 	private List<Entity> entities;
     private Queue<Entity> entitiesToAdd;
     private Queue<Entity> entitiesToDelete;
-
+    
+    public Camera camera;
 	
 	private boolean running = false;
 	
 	public Spriterenderer background = new Spriterenderer(Color.black);
 	
 	public Scene() {
+        this.camera = new Camera(new Vec2(0, 0));
 		entities = new ArrayList<>();
 		entitiesToAdd = new LinkedList<>();
 		entitiesToDelete = new LinkedList<>();
@@ -88,13 +93,10 @@ public class Scene {
 	
 	
 	public void update(float dt) {
-		int es = 0;
 		for(Entity e : entities) {
-			es++;
 			e.update(dt);
 		}
 		
-		System.out.println(es + " Entities");
 		// Add entities queued for addition
         while (!entitiesToAdd.isEmpty()) {
             entities.add(entitiesToAdd.poll());
@@ -117,12 +119,32 @@ public class Scene {
 	public Scene clone() {
 		Scene clone = new Scene();
 		
-		clone.background = new Spriterenderer(this.background.getSprite());
+		if(background.colored()) {
+			clone.background = new Spriterenderer(this.background.getColor());
+		} else {
+			clone.background = new Spriterenderer(this.background.getSprite());
+		}
 		for(Entity e : entities) {
 			clone.addEntity(e);
 		}
 		
 		return clone;
+	}
+
+	public List<LineRenderer> getAllLines() {
+		 List<LineRenderer> lines = new ArrayList<>();
+	        
+        // Use an iterator to safely iterate over entities
+        Iterator<Entity> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            LineRenderer lr = e.getScript(LineRenderer.class);
+            if(lr != null) {
+                lines.add(lr);
+            }
+        }
+        
+        return lines;
 	}
 }
  

@@ -1,0 +1,5 @@
+package com.sulfurengine;
+
+public abstract class Script {
+	public abstract void update(float dt);
+}

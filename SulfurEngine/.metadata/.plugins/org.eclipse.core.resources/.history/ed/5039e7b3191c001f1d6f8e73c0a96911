@@ -1,0 +1,9 @@
+package com.sulfurengine.renderer;
+
+import java.util.Map;
+
+public class Animator extends Script {
+	private Map<String, Sprite> animations;
+	
+	
+}

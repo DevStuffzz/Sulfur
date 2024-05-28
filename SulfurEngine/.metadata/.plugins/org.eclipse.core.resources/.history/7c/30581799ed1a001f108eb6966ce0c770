@@ -1,0 +1,7 @@
+package com.sulfurengine.renderer;
+
+import com.sulfurengine.ecs.Script;
+
+public class TextRenderer extends Script {
+	public String text = "Hello World";
+}

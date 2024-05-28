@@ -1,0 +1,9 @@
+package com.sulfurengine.util;
+
+import com.sulfurengine.ecs.Entity;
+
+public class Prefabs {
+	public static Entity ImageEntity(Sprite sprite) {
+		
+	}
+}

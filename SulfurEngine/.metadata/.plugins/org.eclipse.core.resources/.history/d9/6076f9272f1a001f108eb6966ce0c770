@@ -1,0 +1,23 @@
+import com.sulfurengine.behaviorscripts.BoxCollider;
+import com.sulfurengine.ecs.Entity;
+import com.sulfurengine.ecs.Script;
+
+public class PlayerManager extends Script {
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		BoxCollider col = parent.getScript(BoxCollider.class);
+		
+		for(Entity e : col.getCollidingEntities()) {
+			Projectile p = e.getScript(Projectile.class);
+			
+		}
+	}
+	
+}

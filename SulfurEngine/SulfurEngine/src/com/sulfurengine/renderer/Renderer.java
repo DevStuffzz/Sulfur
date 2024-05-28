@@ -5,8 +5,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.geom.AffineTransform;
 import javax.swing.JPanel;
 
 import com.sulfurengine.behaviorscripts.Spriterenderer;
@@ -22,28 +23,51 @@ public class Renderer extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private Display display;
+    private int originalWidth;
+    private int originalHeight;
+    private double scaleX;
+    private double scaleY;
 
     public Renderer() {
         display = Display.get();
+        originalWidth = display.width();
+        originalHeight = display.height();
 
-        this.setBounds(0, 0, display.width(), display.height());
+        this.setBounds(0, 0, originalWidth, originalHeight);
         this.setDoubleBuffered(true);
 
-        // Additional repaint triggers
-        this.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
+        // Update scaling factor when the component is resized
+        this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                updateScalingFactors();
                 repaint();
             }
         });
+    }
+
+    private void updateScalingFactors() {
+        scaleX = getWidth() / (double) originalWidth;
+        scaleY = getHeight() / (double) originalHeight;
     }
 
     @Override
     public void paint(Graphics grap) {
         super.paint(grap);
 
-        Graphics2D g = (Graphics2D)grap;
+        Graphics2D g = (Graphics2D) grap;
 
-        Transform t = new Transform(new Vec2(0, 0), new Vec2(display.width(), display.height()));
+        // Apply the scaling factor
+        AffineTransform oldTransform = g.getTransform();
+        g.scale(scaleX, scaleY);
+
+        Camera camera = Display.currentScene.camera;
+        Vec2 cameraPos = camera.getPosition();
+
+        // Offset based on camera position with camera as center of the screen
+        int offsetX = (int) (cameraPos.x - originalWidth / 2);
+        int offsetY = (int) (cameraPos.y - originalHeight / 2);
+
+        Transform t = new Transform(new Vec2(0, 0), new Vec2(originalWidth, originalHeight));
         Vec2i pos = Vec2i.convert(t.pos);
         Vec2i scale = Vec2i.convert(t.scale);
 
@@ -56,37 +80,31 @@ public class Renderer extends JPanel {
             g.drawImage(img, pos.x, pos.y, scale.x, scale.y, this);
         }
 
-        Font font = new Font("Arial", Font.PLAIN, 12);
-
-        for (TextRenderer tr : Display.currentScene.getAllTexts()) {
-            Vec2i textPos = Vec2i.convert(tr.parent.transform.pos);
-            g.setColor(Color.black);
-            
-            // Set the font before drawing the text
-            g.setFont(font);
-            
-            // Calculate the position for centered text
-            int textWidth = g.getFontMetrics().stringWidth(tr.text);
-            int textX = textPos.x - (textWidth / 2);
-            int textY = textPos.y;
-            
-            // Draw the text
-            g.drawString(tr.text, textX, textY);
-        }
 
         if (Debug.DEBUG) {
             g.setColor(Color.red);
             for (Entity e : Display.currentScene.getAllEntities()) {
                 Transform tr = e.transform;
-                Vec2i p = Vec2i.convert(tr.pos);
+                Vec2i p = Vec2i.convert(tr.pos).sub(new Vec2(offsetX, offsetY));
                 Vec2i s = Vec2i.convert(tr.scale);
+
+
+                // Apply rotation
+                AffineTransform oldEntityTransform = g.getTransform();
+                g.rotate(Math.toRadians(tr.rotation), p.x, p.y);
                 g.fillRect(p.x - s.x / 2, p.y - s.y / 2, s.x, s.y);
+                g.setTransform(oldEntityTransform);
             }
         } else {
             for (Spriterenderer sprite : Display.currentScene.getAllSprites()) {
                 Transform t1 = sprite.parent.transform;
-                Vec2i p = Vec2i.convert(t1.pos);
+                Vec2i p = Vec2i.convert(t1.pos).sub(new Vec2(offsetX, offsetY));
                 Vec2i s = Vec2i.convert(t1.scale);
+
+
+                // Apply rotation
+                AffineTransform oldEntityTransform = g.getTransform();
+                g.rotate(Math.toRadians(t1.rotation), p.x, p.y);
 
                 if (sprite.colored()) {
                     g.setColor(sprite.getColor());
@@ -119,7 +137,34 @@ public class Renderer extends JPanel {
 
                     g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, this);
                 }
+                g.setTransform(oldEntityTransform); // Reset transform after drawing
             }
         }
+        
+        g.setTransform(oldTransform);
+
+        for (TextRenderer tr : Display.currentScene.getAllTexts()) {
+            Vec2i textPos = Vec2i.convert(tr.parent.transform.pos);
+            Vec2i offsetTextPos = new Vec2i(textPos.x - offsetX, textPos.y - offsetY);
+            g.setColor(Color.black);
+
+            // Set the font before drawing the text
+            g.setFont(tr.font);
+
+            // Calculate the position for centered text
+            int textWidth = g.getFontMetrics().stringWidth(tr.text);
+            int textX = offsetTextPos.x - (textWidth / 2);
+            int textY = offsetTextPos.y;
+
+            // Draw the text
+            g.drawString(tr.text, textX, textY);
+        }
+        
+        for(LineRenderer lr : Display.currentScene.getAllLines()) {
+        	lr.render(g);
+        }
+
+
+        // Reset the scaling transform
     }
 }

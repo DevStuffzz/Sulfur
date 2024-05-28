@@ -1,0 +1,66 @@
+package com.sulfurengine;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Entity {
+	public String name;
+	public Transform transform;
+	
+	private List<Script> scripts;
+	
+	public Entity(String name, Transform t) {
+		this.name = name;
+		this.transform = t;
+		this.scripts = new ArrayList<>();
+	}
+	
+	 public <T extends Script> T getScript(Class<T> ScriptClass) {
+	        for (Script c : scripts) {
+	            if (ScriptClass.isAssignableFrom(c.getClass())) {
+	                try {
+	                    return ScriptClass.cast(c);
+	                } catch (ClassCastException e) {
+	                    e.printStackTrace();
+	                    assert false : "Error: Casting Script.";
+	            }
+	        }
+	    }
+	
+	    return null;
+	}
+	
+	public <T extends Script> void removeScript(Class<T> ScriptClass) {
+	    for (int i=0; i < scripts.size(); i++) {
+	        Script s = scripts.get(i);
+	        if (ScriptClass.isAssignableFrom(s.getClass())) {
+	            scripts.remove(i);
+	            return;
+	        }
+	    }
+	}
+	
+	public void addScript(Script s) {
+		System.out.println("adding new script");
+	    this.scripts.add(s);
+	    
+		for(Script sy : scripts) {
+			System.out.println("There is a script");
+		}
+	    s.parent = this;
+	}
+
+	public void start() {
+		for(Script s : scripts) {
+			s.start();
+		}
+	}
+	
+	public void update(float dt) {
+		System.out.println("Updating");
+		for(Script s : scripts) {
+			System.out.println("Updating script");
+			s.update(dt);
+		}
+	}
+}
