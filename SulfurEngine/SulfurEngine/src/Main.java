@@ -1,24 +1,14 @@
 
 import java.awt.Color;
-import java.awt.Font;
 
-import com.sulfurengine.behaviorscripts.AudioClip;
-import com.sulfurengine.behaviorscripts.BoxCollider;
-import com.sulfurengine.behaviorscripts.LineBetween;
-import com.sulfurengine.behaviorscripts.PlayerMovement;
-import com.sulfurengine.behaviorscripts.Rotator;
 import com.sulfurengine.behaviorscripts.Spriterenderer;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Transform;
 import com.sulfurengine.io.Display;
 import com.sulfurengine.io.Scene;
 import com.sulfurengine.io.SceneManager;
-import com.sulfurengine.renderer.Animator;
-import com.sulfurengine.renderer.LineRenderer;
-import com.sulfurengine.renderer.Sprite;
 import com.sulfurengine.renderer.TextRenderer;
-import com.sulfurengine.ui.UiComponent;
-import com.sulfurengine.util.Debug;
+
 import com.sulfurengine.util.Prefabs;
 import com.sulfurengine.util.Vec2;
 

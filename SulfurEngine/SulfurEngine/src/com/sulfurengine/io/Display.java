@@ -1,5 +1,6 @@
 package com.sulfurengine.io;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -7,9 +8,15 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 
-import com.sulfurengine.renderer.DirtyFlag;
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.behaviorscripts.WatermarkScene;
+import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.renderer.Renderer;
+import com.sulfurengine.renderer.Sprite;
+import com.sulfurengine.renderer.TextRenderer;
 import com.sulfurengine.util.Debug;
+import com.sulfurengine.util.Prefabs;
+import com.sulfurengine.util.Vec2;
 
 public class Display {
 	private int width, height;
@@ -18,6 +25,7 @@ public class Display {
 	
 	private JFrame frame;
 	private Renderer renderer;
+	private Scene watermarkScene;
 	public static Scene currentScene = new Scene();
 	
 	
@@ -33,6 +41,20 @@ public class Display {
 
 	
 	public void init(int w, int h, String t) {
+		watermarkScene = new Scene();
+		watermarkScene.background = new Spriterenderer(Color.red);
+		Entity watermark = Prefabs.ImageEntity(new Sprite("/resources/branding/logo.png"));
+		watermark.transform.scale = new Vec2(400, 300);
+		watermark.addScript(new WatermarkScene());
+
+		Entity text = Prefabs.TextEntity("Made using Sulfur Engine", TextRenderer.DEFAULT_FONT);
+		text.transform.pos = new Vec2(0, 200);
+
+		watermarkScene.addEntity(watermark);
+		watermarkScene.addEntity(text);
+
+		SceneManager.AddScene(watermarkScene);
+
 		this.width = w;
 		this.height = h;
 		this.title = t;
