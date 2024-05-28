@@ -3,4 +3,8 @@
     <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.Spriterenderer"/>
     <fullyQualifiedTypeName name="java.awt.Color"/>
     <fullyQualifiedTypeName name="com.sulfurengine.renderer.Animator"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.util.Debug"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.util.Prefabs"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.Display"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.Input"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,121 @@
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
+import com.sulfurengine.behaviorscripts.Spriterenderer;
+import com.sulfurengine.ecs.Script;
+import com.sulfurengine.io.Display;
+import com.sulfurengine.renderer.Sprite;
+
+public class RayTracer extends Script {
+
+    BufferedImage image;
+    private int width;
+    private int height;
+
+    private static final int SAMPLES_PER_PIXEL = 5; // Number of samples for anti-aliasing
+
+    // Sphere properties
+    private static final Sphere[] spheres = {
+        new Sphere(-100, 0, -50, 100, Color.RED),
+        new Sphere(100, 0, -50, 100, Color.BLUE),
+        new Sphere(0, 10100+50, 0, 10000, Color.white)
+    };
+
+    // Camera properties
+    private static final float CAMERA_RADIUS = 500.0f; // Distance from the origin
+    private float cameraAzimuth = 0.0f; // Horizontal angle
+    private float cameraElevation = 0.0f; // Vertical angle
+
+    // Light properties
+    private static final float[] LIGHT_POS = { 1.0f, -1.0f, -1.0f };
+    private static final Color BACKGROUND_COLOR = Color.DARK_GRAY;
+
+    @Override
+    public void start() {
+        width = (int) parent.transform.scale.x;
+        height = (int) parent.transform.scale.y;
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    }
+
+    @Override
+    public void update(float dt) {
+        cameraAzimuth += 0.01f; // Example: Rotate the camera horizontally
+        cameraElevation += 0.01f; // Example: Rotate the camera vertically
+
+        IntStream.range(0, width).parallel().forEach(x -> {
+            for (int y = 0; y < height; y++) {
+                int pixel = pixelColor(x, y);
+                image.setRGB(x, y, pixel);
+            }
+        });
+        parent.getScript(Spriterenderer.class).getSprite().setImage(image);
+    }
+
+    public int pixelColor(int x, int y) {
+        float r = 0;
+        float g = 0;
+        float b = 0;
+
+        for (int i = 0; i < SAMPLES_PER_PIXEL; i++) {
+            float offsetX = (float) (ThreadLocalRandom.current().nextDouble() - 0.5);
+            float offsetY = (float) (ThreadLocalRandom.current().nextDouble() - 0.5);
+
+            float worldX = x + offsetX - width / 2.0f;
+            float worldY = y + offsetY - height / 2.0f;
+            float worldZ = 0.0f;
+
+            // Convert pixel coordinates to ray direction in camera space
+            float[] rayDir = computeRayDirection(worldX, worldY, worldZ);
+
+            Color color = traceRay(0, 0, 0, rayDir[0], rayDir[1], rayDir[2], 1);
+
+            r += color.getRed();
+            g += color.getGreen();
+            b += color.getBlue();
+        }
+
+        r /= SAMPLES_PER_PIXEL;
+        g /= SAMPLES_PER_PIXEL;
+        b /= SAMPLES_PER_PIXEL;
+
+        return new Color((int) r, (int) g, (int) b).getRGB();
+    }
+
+    private float[] computeRayDirection(float worldX, float worldY, float worldZ) {
+        // Convert spherical coordinates to Cartesian coordinates
+        float cameraX = CAMERA_RADIUS * (float) Math.cos(cameraElevation) * (float) Math.cos(cameraAzimuth);
+        float cameraY = CAMERA_RADIUS * (float) Math.sin(cameraElevation);
+        float cameraZ = CAMERA_RADIUS * (float) Math.cos(cameraElevation) * (float) Math.sin(cameraAzimuth);
+
+        // Compute ray direction from camera to the world point
+        float rayDirX = worldX - cameraX;
+        float rayDirY = worldY - cameraY;
+        float rayDirZ = worldZ - cameraZ;
+
+        // Normalize ray direction
+        float length = (float) Math.sqrt(rayDirX * rayDirX + rayDirY * rayDirY + rayDirZ * rayDirZ);
+        return new float[] { rayDirX / length, rayDirY / length, rayDirZ / length };
+    }
+
+    private Color traceRay(float rayOriginX, float rayOriginY, float rayOriginZ, float rayDirX, float rayDirY,
+            float rayDirZ, int depth) {
+        // Ray tracing logic remains the same
+        // Implement your ray-sphere intersection, shading, and reflection here
+        // ...
+    }
+
+    private static class Sphere {
+        float centerX, centerY, centerZ;
+        float radius;
+        Color color;
+
+        Sphere(float centerX, float centerY, float centerZ, float radius, Color color) {
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.centerZ = centerZ;
+            this.radius = radius;
+            this.color = color;
+        }
+    }
+}

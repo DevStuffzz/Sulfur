@@ -1,8 +1,10 @@
 package com.sulfurengine.behaviorscripts;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import com.sulfurengine.ecs.Script;
+import com.sulfurengine.io.Display;
 import com.sulfurengine.renderer.Sprite;
 
 public class Spriterenderer extends Script{
@@ -26,6 +28,21 @@ public class Spriterenderer extends Script{
 		this.colored = true;
 	}
 	
+	public Spriterenderer() {
+		int width = Display.get().width();
+		int height = Display.get().height();
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				image.setRGB(x, y, Color.white.getRGB()); // Set each pixel to white
+			}
+		}
+		this.sprite = new Sprite(image);
+		this.color = null;
+		this.colored = false;
+	}
+
 	public Sprite getSprite() {
 		return sprite;
 	}
