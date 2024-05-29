@@ -44,6 +44,7 @@ public class Display {
 		watermarkScene = new Scene();
 		watermarkScene.background = new Spriterenderer(Color.red);
 		Entity watermark = Prefabs.ImageEntity(new Sprite("/resources/branding/logo.png"));
+		
 		watermark.transform.scale = new Vec2(400, 300);
 		watermark.addScript(new WatermarkScene());
 
@@ -64,6 +65,8 @@ public class Display {
 		
 		frame.setResizable(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.setIconImage(new Sprite("/resources/branding/logo.png").getImage());
 		
 		Input.initialize(frame);
 		

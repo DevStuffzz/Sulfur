@@ -125,7 +125,8 @@ public class Scene {
 			clone.background = new Spriterenderer(this.background.getSprite());
 		}
 		for(Entity e : entities) {
-			clone.addEntity(e);
+			Entity c = e.clone();
+			clone.addEntity(c);
 		}
 		
 		return clone;

@@ -2,9 +2,13 @@
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.Spriterenderer"/>
     <fullyQualifiedTypeName name="java.awt.Color"/>
-    <fullyQualifiedTypeName name="com.sulfurengine.renderer.Animator"/>
     <fullyQualifiedTypeName name="com.sulfurengine.util.Debug"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.util.AssetManager"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.renderer.Animator"/>
+    <fullyQualifiedTypeName name="java.awt.event.KeyEvent"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.SceneManager"/>
     <fullyQualifiedTypeName name="com.sulfurengine.util.Prefabs"/>
-    <fullyQualifiedTypeName name="com.sulfurengine.io.Display"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.renderer.TextRenderer"/>
     <fullyQualifiedTypeName name="com.sulfurengine.io.Input"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.Display"/>
 </qualifiedTypeNameHistroy>

@@ -70,4 +70,13 @@ public class Entity {
 		r.setBounds((int)transform.pos.x, (int)transform.pos.y, (int)transform.scale.x, (int)transform.scale.y);
 		return r;
 	}
+	
+	@Override
+	public Entity clone() {
+		Entity e = new Entity(name, transform);
+		for(Script s : scripts) {
+			e.addScript(s);
+		}
+		return e;
+	}
 }

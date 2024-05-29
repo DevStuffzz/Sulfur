@@ -146,10 +146,11 @@ public class Renderer extends JPanel {
         for (TextRenderer tr : Display.currentScene.getAllTexts()) {
             Vec2i textPos = Vec2i.convert(tr.parent.transform.pos);
             Vec2i offsetTextPos = new Vec2i(textPos.x - offsetX, textPos.y - offsetY);
-            g.setColor(Color.black);
+            g.setColor(tr.color);
 
             // Set the font before drawing the text
             g.setFont(tr.font);
+            
 
             // Calculate the position for centered text
             int textWidth = g.getFontMetrics().stringWidth(tr.text);

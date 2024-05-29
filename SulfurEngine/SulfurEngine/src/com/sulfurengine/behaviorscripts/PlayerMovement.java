@@ -4,6 +4,7 @@ import com.sulfurengine.io.Display;
 import com.sulfurengine.io.Input;
 import com.sulfurengine.renderer.Animator;
 import com.sulfurengine.renderer.DirtyFlag;
+import com.sulfurengine.util.Vec2;
 
 public class PlayerMovement extends Script {
 
@@ -19,7 +20,7 @@ public class PlayerMovement extends Script {
 		float x = Input.getAxisHorizontal() * speed * dt;
 		float y = Input.getAxisVertical() * speed * dt;
 		
-		parent.transform.pos.add(x, y);
+		parent.transform.pos = parent.transform.pos.add(new Vec2(x, y));
 		
 		Spriterenderer spr = parent.getScript(Spriterenderer.class);
 		if(spr != null) {
