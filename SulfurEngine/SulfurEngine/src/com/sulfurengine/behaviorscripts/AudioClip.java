@@ -4,39 +4,25 @@ import javax.sound.sampled.*;
 
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Script;
+import com.sulfurengine.util.AssetManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class AudioClip extends Script {
-	 private String audioPath;
 	    private Clip clip;
 	    private boolean playOnAwake;
 
 
 	    public AudioClip(String audioPath, boolean playOnAwake) {
-	        this.audioPath = audioPath;
-	        this.playOnAwake = playOnAwake;
-	        try {
-	            // Load the audio resource
-	            URL audioUrl = getClass().getResource(audioPath);
-	            if (audioUrl == null) {
-	                System.err.println("Audio file does not exist at: " + audioPath);
-	                return;
-	            }
-
-	            // Open an audio input stream.
-	            AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioUrl);
-	            // Get a sound clip resource.
-	            clip = AudioSystem.getClip();
-	            // Open audio clip and load samples from the audio input stream.
-	            clip.open(audioIn);
-	        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-	            e.printStackTrace();
-	        }
+	        clip = AssetManager.getClip(audioPath);
 	    }
 
+	    public static void PlayOneShot(String path) {
+	    	AudioClip clip = new AudioClip(path, false);
+	    	clip.playOneShot();
+	    }
 
 	    @Override
 	    public void start() {

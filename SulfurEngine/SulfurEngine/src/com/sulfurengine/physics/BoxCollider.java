@@ -24,6 +24,7 @@ public class BoxCollider extends Script {
 
     @Override
     public void update(float dt) {
+    
         // Clear the list of colliding entities before performing collision detection
         collidingEntities.clear();
         

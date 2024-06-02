@@ -5,7 +5,11 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.sulfurengine.behaviorscripts.Spriterenderer;
@@ -106,6 +110,18 @@ public class Display {
 	        currentScene.update(dt);
 	        renderer.repaint();
 	    }
+	    
+	    if(Input.isKeyDown(KeyEvent.VK_4)) {
+	    	BufferedImage img = new BufferedImage(frame.getWidth(), frame.getHeight(), BufferedImage.TYPE_INT_RGB);
+	    	frame.paint(img.getGraphics());
+	    	File outputfile = new File("saved.png");
+	    	try {
+				ImageIO.write(img, "png", outputfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 	}
 
 
@@ -138,5 +154,9 @@ public class Display {
 
 	public Renderer renderer() {
 		return this.renderer;
+	}
+
+	public void setIcon(Sprite sprite) {
+		frame.setIconImage(sprite.getImage());
 	}
 }

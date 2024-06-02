@@ -1,8 +1,0 @@
-import java.awt.Component;
-
-import com.sulfurengine.util.Vec2;
-
-public class Projectile extends Component{
-	private Vec2 direction;
-	private float speed = 250.0f;
-}

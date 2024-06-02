@@ -1,5 +1,6 @@
 import java.awt.event.KeyEvent;
 
+import com.sulfurengine.behaviorscripts.AudioClip;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Script;
 import com.sulfurengine.io.Display;
@@ -12,7 +13,6 @@ public class PickupCoin extends Script{
 	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 		coins = 0;
 	}
 
@@ -28,6 +28,21 @@ public class PickupCoin extends Script{
 		if(other.getScript(Coin.class) != null) {
 			coins++;
 			Display.currentScene.destroy(other);
+			AudioClip.PlayOneShot("/resources/coin.wav");
+		}
+		
+		if(other.getScript(EnemyController.class) != null) {
+			if(parent.transform.pos.y < other.transform.pos.y) {
+				Display.currentScene.destroy(other);
+			} else {
+				SceneManager.SetScene(1);
+				AudioClip.PlayOneShot("/resources/lose.wav");
+
+			}
+		}
+		if(other.getScript(Mushroom.class) != null) {
+			AudioClip.PlayOneShot("/resources/levelup.wav");
+			SceneManager.NextScene();
 		}
 	}
 

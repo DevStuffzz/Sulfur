@@ -43,9 +43,9 @@ public class Scene {
 	
 	public Entity instantiate(Entity e) {
 		this.entitiesToAdd.offer(e);
-		if(running) {
-			e.start();
-		}
+		
+		e.start();
+		
 		return e;
 	}
 	
@@ -146,6 +146,17 @@ public class Scene {
         }
         
         return lines;
+	}
+
+	public Entity findEntityByName(String name) {
+		Iterator<Entity> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if(e.name.equals(name)) {
+                return e;
+            }
+        }		
+        return null;
 	}
 }
  

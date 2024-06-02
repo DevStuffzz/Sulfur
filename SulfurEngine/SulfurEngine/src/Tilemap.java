@@ -1,11 +1,13 @@
 import java.util.List;
 
+import com.sulfurengine.behaviorscripts.PhysicsCollisionIgnore;
 import com.sulfurengine.behaviorscripts.Spriterenderer;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Script;
 import com.sulfurengine.ecs.Transform;
 import com.sulfurengine.io.Display;
 import com.sulfurengine.physics.BoxCollider;
+import com.sulfurengine.physics.Rigidbody;
 import com.sulfurengine.renderer.Sprite;
 import com.sulfurengine.util.Vec2;
 
@@ -30,7 +32,6 @@ public class Tilemap extends Script{
 	            int tileValue = tileData[y][x];
 	            if(tileValue == 0) continue;
 	            int spriteValue = tileValue-1;
-	            System.out.println("h");
 	            
 	            // Check if the tile value is valid and within the range of spriteData
 	            if (tileValue > 0 && tileValue <= spriteData.size()) {
@@ -38,7 +39,7 @@ public class Tilemap extends Script{
 	                Sprite sprite = spriteData.get(spriteValue); // Adjusting for zero-based indexing
 	                
 	                // Create an entity for this tile
-	                Entity tile = new Entity("Tile_" + x + "_" + y, new Transform());
+	                Entity tile = new Entity("tile", new Transform());
 	                
 	                // Calculate position based on tile size and grid position
 	                Vec2 position = new Vec2(x * tileSize, y * tileSize);
@@ -51,9 +52,20 @@ public class Tilemap extends Script{
 	                tile.addScript(new BoxCollider());
 	                if(spriteValue == 2) {
 	                	tile.addScript(new Coin());
+	                	tile.addScript(new PhysicsCollisionIgnore());
 	                	tile.transform.scale = new Vec2(32, 32);
+	                	tile.name = "coin";
 	                }
-	                
+	                if(spriteValue == 3) {
+	                	tile.addScript(new Rigidbody());
+	                	tile.addScript(new EnemyController());
+	                	tile.addScript(new PhysicsCollisionIgnore());
+	                	tile.name = "enemy";
+	                }
+	                if(spriteValue == 4) {
+	                	tile.addScript(new Mushroom());
+	                	tile.name = "mushroom";
+	                }
 	                // Add the entity to the scene
 	                Display.currentScene.instantiate(tile);
 	            }

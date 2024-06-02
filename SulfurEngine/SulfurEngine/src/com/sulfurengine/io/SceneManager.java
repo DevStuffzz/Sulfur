@@ -11,12 +11,15 @@ public class SceneManager {
     
     private static List<Scene> initialScenes = new ArrayList<>();
     
+    public static int CurrentSceneIndex;
+    
     public static void AddScene(Scene scene) {
 		// Store a clone of the initial state
 		initialScenes.add((Scene) scene.clone());
     }
     
     public static void SetScene(int index) {
+    	CurrentSceneIndex = index;
         Scene scene = initialScenes.get(index).clone();
         
         for(Entity e : Display.currentScene.getAllEntities()) {
@@ -30,4 +33,8 @@ public class SceneManager {
         Display.currentScene = scene;
         Display.currentScene.start();
     }
+
+	public static void NextScene() {
+		SetScene(CurrentSceneIndex +1);
+	}
 }

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.Spriterenderer"/>
     <fullyQualifiedTypeName name="java.awt.Color"/>
     <fullyQualifiedTypeName name="com.sulfurengine.util.Debug"/>
-    <fullyQualifiedTypeName name="com.sulfurengine.util.AssetManager"/>
     <fullyQualifiedTypeName name="com.sulfurengine.renderer.Animator"/>
     <fullyQualifiedTypeName name="java.awt.event.KeyEvent"/>
-    <fullyQualifiedTypeName name="com.sulfurengine.io.SceneManager"/>
     <fullyQualifiedTypeName name="com.sulfurengine.util.Prefabs"/>
     <fullyQualifiedTypeName name="com.sulfurengine.renderer.TextRenderer"/>
-    <fullyQualifiedTypeName name="com.sulfurengine.io.Input"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.PhysicsCollisionIgnore"/>
     <fullyQualifiedTypeName name="com.sulfurengine.io.Display"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.Spriterenderer"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.behaviorscripts.AudioClip"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.util.AssetManager"/>
+    <fullyQualifiedTypeName name="Scenes"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.Input"/>
+    <fullyQualifiedTypeName name="com.sulfurengine.io.SceneManager"/>
 </qualifiedTypeNameHistroy>

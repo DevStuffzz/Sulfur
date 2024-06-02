@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Script;
 import com.sulfurengine.io.Input;
+import com.sulfurengine.io.SceneManager;
 import com.sulfurengine.physics.Rigidbody;
 import com.sulfurengine.renderer.Animator;
 import com.sulfurengine.util.Vec2;
@@ -12,14 +13,14 @@ import com.sulfurengine.util.Vec2;
 public class PlatformerController extends Script {
     private Rigidbody rigidbody;
     private float moveSpeed = 500f;
-    private float jumpForce = 700f;
+    private float jumpForce = 1000f;
     private boolean isGrounded = false;
 
     @Override
     public void start() {
         // Get the Rigidbody component attached to the entity
         rigidbody = parent.getScript(Rigidbody.class);
-        parent.transform.pos = new Vec2(100, 400);
+        parent.transform.pos = new Vec2(100, 600);
     }
 
     @Override
@@ -29,6 +30,11 @@ public class PlatformerController extends Script {
 
         // Handle jumping
         handleJump();
+        
+        if(parent.transform.pos.y >= 1300.0f) {
+        	SceneManager.SetScene(1);
+			AudioClip.PlayOneShot("/resources/lose.wav");
+        }
     }
 
     private void handleMovement() {
@@ -46,9 +52,11 @@ public class PlatformerController extends Script {
         
         float moveVelocity = moveInput * moveSpeed;
         
+    
+        
         // Apply horizontal movement
         rigidbody.velocity.x = moveVelocity;
-        rigidbody.applyForce(new Vec2(0, 1)); 
+        rigidbody.applyForce(new Vec2(0, 2f)); 
     }
 
     private void handleJump() {
@@ -56,6 +64,7 @@ public class PlatformerController extends Script {
             // Apply vertical force for jumping
             rigidbody.applyForce(new Vec2(0, -jumpForce));
             isGrounded = false; // Update grounded state
+            AudioClip.PlayOneShot("/resources/jump.wav");
         }
     }
     
@@ -64,8 +73,12 @@ public class PlatformerController extends Script {
     @Override
     public void onCollision(Entity other) {
         // Check if the collided entity is named "ground" and if the player is above it
+    	if(isAboveGround(other))
+    		onGrounded(); // 
     	
-    	onGrounded(); // 
+    	if(isBelowGround(other))
+        	rigidbody.applyForce(new Vec2(0, 100.0f));
+    	
     }
 
     // Method to check if the player is positioned above the ground entity
@@ -77,11 +90,31 @@ public class PlatformerController extends Script {
         Vec2 groundPosition = groundEntity.transform.pos;
         
         // Compare the y-coordinates to check if the player is above the ground
-        return playerPosition.y > groundPosition.y;
+        float groundTop = groundPosition.y - (groundEntity.transform.scale.y / 2.0f);
+        float playerBottom = playerPosition.y + (parent.transform.scale.y / 2.0f);
+        return playerPosition.y < groundTop;
     }
 
+    private boolean isBelowGround(Entity groundEntity) {
+    	
+    	Vec2 playerPosition = parent.transform.pos;
+        
+        // Get the position of the ground entity
+        Vec2 groundPosition = groundEntity.transform.pos;
+        
+        // Compare the y-coordinates to check if the player is above the ground
+        float groundTop = groundPosition.y - (groundEntity.transform.scale.y / 2.0f);
+        float playerBottom = playerPosition.y + (parent.transform.scale.y / 2.0f);
+        return playerPosition.y > groundTop;
+
+    }
+    
     // Method to be called when the entity lands on the ground
     public void onGrounded() {
         isGrounded = true;
     }
+
+	public boolean isJumpingDown() {
+		return !isGrounded;
+	}
 }

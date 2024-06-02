@@ -26,13 +26,23 @@ import com.sulfurengine.util.Prefabs;
 import com.sulfurengine.util.Vec2;
 
 public class Main {
-    private static final int PLAYER_JUMP_FORCE = -10; // Adjust as needed
 
     public static void main(String[] args) {
         Display display = Display.get();
-        display.init(800, 600, "Sulfur Engine");      
+        display.init(800, 600, "Mushroom Hiest");     
+        display.setIcon(new Sprite("/resources/mushroom.png"));
         
-        SceneManager.AddScene(gameScene());
+        SceneManager.AddScene(level(0));
+        SceneManager.AddScene(level(1));
+        SceneManager.AddScene(level(2));
+        SceneManager.AddScene(level(3));
+        SceneManager.AddScene(level(4));
+        SceneManager.AddScene(level(5));
+        SceneManager.AddScene(gameOver());
+
+
+
+
         SceneManager.SetScene(0);
         
         while(Display.open()) {
@@ -42,16 +52,43 @@ public class Main {
         display.close();
     }
     
-    private static Scene gameScene() {
-        Scene scene = new Scene();
-        scene.background = new Spriterenderer(Color.magenta);
-        Entity bg = new Entity("bg", new Transform());
-        bg.transform.pos = new Vec2(100, 400);
-        bg.transform.scale = new Vec2(1920*2.0f,1080*2.0f);
-        bg.addScript(new Spriterenderer(new Sprite("/resources/bg.png")));
-        scene.addEntity(bg);
+    private static Scene gameOver() {
+    	Scene scene = new Scene();
+    	scene.background = new Spriterenderer(new Sprite("/resources/bg.jpg"));
+    	
+    	Entity GameOverText = Prefabs.TextEntity("You Win! (R to play again, Esc to close", TextRenderer.DEFAULT_FONT);
+    	GameOverText.transform.pos = new Vec2(0, -100);
+    	
+    	Entity mushroom = Prefabs.ImageEntity(new Sprite("/resources/mushroom.png"));
+    	mushroom.transform = new Transform(new Vec2(0, 0), new Vec2(100, 100));
+    	
+    	mushroom.addScript(new CameraFollow());
+    	
+    	scene.addEntity(GameOverText);
+    	scene.addEntity(mushroom);
+    	return scene;
+    }
+    
+    private static Scene level(int level) {
+    	Scene scene = new Scene();
+        scene.background = new Spriterenderer(new Sprite("/resources/bg.jpg"));
+      
+        if(level == 0) {
+        Entity tutText1 = Prefabs.TextEntity("Collect Coins", TextRenderer.DEFAULT_FONT);
+        tutText1.transform.pos = new Vec2(100, 500);
+        scene.addEntity(tutText1);
         
-        Entity player = new Entity("Player", new Transform());
+        Entity tutText2 = Prefabs.TextEntity("Stomp on the enemies", TextRenderer.DEFAULT_FONT);
+        tutText2.transform.pos = new Vec2(700, 500);
+        scene.addEntity(tutText2);
+        
+
+        Entity tutText3 = Prefabs.TextEntity("Collect Mushrooms to progress", TextRenderer.DEFAULT_FONT);
+        tutText3.transform.pos = new Vec2(900, 500);
+        scene.addEntity(tutText3);
+        }
+        
+        Entity player = new Entity("player", new Transform());
         player.transform.pos = new Vec2(0, -50);
         player.transform.scale = new Vec2(50, 50);
         player.addScript(new Rigidbody());
@@ -67,60 +104,55 @@ public class Main {
         playerAnim.addAnim("walk", new Sprite("/resources/walk.gif"));
         player.addScript(playerAnim);
         
-        scene.addEntity(player);
-        scene.addEntity(createTilemapEntity());
-        
-        return scene;
-    }
-
-
-
-    public static Entity createTilemapEntity() {
+       
         Tilemap tilemapScript = new Tilemap();
-        tilemapScript.tileData = generateMap();
+        switch(level) {
+        case 0:
+        	tilemapScript.tileData = Scenes.tutorial();
+        	break;
+        case 1:
+        	tilemapScript.tileData = Scenes.level1();
+        	break;
+        case 2:
+        	tilemapScript.tileData = Scenes.level2();
+        	break;
+        case 3:
+        	tilemapScript.tileData = Scenes.level3();
+        	break;
+        case 4:
+        	tilemapScript.tileData = Scenes.level4();
+        	break;
+        case 5:
+        	tilemapScript.tileData = Scenes.level5();
+        	Entity bg = Prefabs.ImageEntity(new Sprite("/resources/grid.png"));
+        	bg.transform = new Transform(new Vec2(100, 400), new Vec2(5000, 5000));
+        	scene.addEntity(bg);
+        }
         tilemapScript.spriteData = generateSprites();
         tilemapScript.tileSize = 60;
 
         Entity tilemapEntity = new Entity("TilemapEntity", new Transform());
         tilemapEntity.addScript(tilemapScript);
-
-        return tilemapEntity;
+        
+        
+        scene.addEntity(player);
+        scene.addEntity(tilemapEntity);
+        
+        return scene;
     }
+    
+
 
     private static List<Sprite> generateSprites() {
         List<Sprite> sprites = new ArrayList<>();
         sprites.add(new Sprite("/resources/grass.png"));
         sprites.add(new Sprite("/resources/grid.png"));
         sprites.add(new Sprite("/resources/coin.gif"));
+        sprites.add(new Sprite("/resources/enemy.gif"));
+        sprites.add(new Sprite("/resources/mushroom.png"));
 
         return sprites;
     }
     
-    private static int[][] generateMap() {
-        int[][] map = {
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // Row 0 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // Row 1 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // Row 2 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // Row 3 to 11 (air)
-            {0, 0, 3, 0, 2, 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 3, 0, 0, 0}, // Row 4 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0}, // Row 5 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0}, // Row 6 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 3, 0, 0, 2, 2, 0}, // Row 7 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0}, // Row 8 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0}, // Row 9 to 11 (air)
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 3, 0}, // Row 10 to 11 (air)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 12 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 13 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 14 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 15 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 16 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 17 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 18 (grass)
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // Row 19 (grass)
-        };
-
-        return map;
-    }
-
 
 }

@@ -1,5 +1,0 @@
-import java.awt.Component;
-
-public class Projectile extends Component{
-	private Vec2 direction;
-}

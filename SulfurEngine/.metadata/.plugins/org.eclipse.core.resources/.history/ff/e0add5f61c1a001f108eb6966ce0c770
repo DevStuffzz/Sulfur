@@ -1,5 +1,0 @@
-package com.sulfurengine;
-
-public class DirtyFlag {
-	public static boolean dirty = true;
-}
