@@ -34,3 +34,6 @@ Right now sulfur can render any entity as a Ui Component
 ### Animations
 Right now Sulfur is only able to render animations using .GIF format.
 
+## Games using Sulfur
+[Mushroom Heist](https://cbeaver05.itch.io/mushroom-heist)
+[Just Keep Swimming](https://cbeaver05.itch.io/just-keep-swimming)
