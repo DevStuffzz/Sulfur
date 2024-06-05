@@ -1,7 +1,7 @@
-# Sulfur Engine 1.0.0
+# Sulfur Engine 1.1.0
 
 ## About
-Sulfur is a cross-platoform open-sourced 2D game engine that uses the swing graphics library.
+Sulfur is a cross-platoform open-sourced 2D and Psudeo-3D game engine that uses the swing graphics library.
 
 ## Getting Started
 *There are no external dependencies for Sulfur*
@@ -33,6 +33,9 @@ Right now sulfur can render any entity as a Ui Component
 
 ### Animations
 Right now Sulfur is only able to render animations using .GIF format.
+
+### Raycasting
+Sulfur has simple Raycasting that is very easy to get up and running
 
 ## Games using Sulfur
 [Mushroom Heist](https://cbeaver05.itch.io/mushroom-heist)

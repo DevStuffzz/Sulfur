@@ -18,6 +18,19 @@ public class SceneManager {
 		initialScenes.add((Scene) scene.clone());
     }
     
+    public static void SetScene(Scene scene) {
+        for(Entity e : Display.currentScene.getAllEntities()) {
+        	AudioClip clip = e.getScript(AudioClip.class);
+        	if(clip != null) {
+        		clip.stopClip();
+        	}
+        }
+        
+        
+        Display.currentScene = scene;
+        Display.currentScene.start();
+    }
+    
     public static void SetScene(int index) {
     	CurrentSceneIndex = index;
         Scene scene = initialScenes.get(index).clone();

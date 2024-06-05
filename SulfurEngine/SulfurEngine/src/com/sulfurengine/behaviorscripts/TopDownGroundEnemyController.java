@@ -1,11 +1,11 @@
-import com.sulfurengine.behaviorscripts.Spriterenderer;
+package com.sulfurengine.behaviorscripts;
 import com.sulfurengine.ecs.Entity;
 import com.sulfurengine.ecs.Script;
 import com.sulfurengine.io.Display;
 import com.sulfurengine.physics.Rigidbody;
 import com.sulfurengine.util.Vec2;
 
-public class EnemyController extends Script {
+public class TopDownGroundEnemyController extends Script {
     private Rigidbody rigidbody;
     private float moveSpeed = 150f; // Adjust the speed as necessary
     private Entity player; // Reference to the player entity

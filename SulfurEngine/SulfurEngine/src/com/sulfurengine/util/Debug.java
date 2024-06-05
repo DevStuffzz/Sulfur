@@ -1,5 +1,6 @@
 package com.sulfurengine.util;
 
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +29,7 @@ public class Debug {
 	}
 	
 	public static boolean fileExists(String path) {
-		Path filePath = Paths.get(path);
-        return Files.exists(filePath);
+		URL imageUrl = Debug.class.getResource(path);
+		return imageUrl != null;
 	}
 }

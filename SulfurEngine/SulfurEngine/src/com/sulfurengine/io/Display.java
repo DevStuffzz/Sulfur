@@ -12,6 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.sulfurengine.Sulfur;
 import com.sulfurengine.behaviorscripts.Spriterenderer;
 import com.sulfurengine.behaviorscripts.WatermarkScene;
 import com.sulfurengine.ecs.Entity;
@@ -36,6 +37,7 @@ public class Display {
 	private Display() {};
 	
 	public static Display get() {
+		
 		if(instance == null) {
 			instance = new Display();
 		} 
@@ -45,6 +47,7 @@ public class Display {
 
 	
 	public void init(int w, int h, String t) {
+		Sulfur.init();
 		watermarkScene = new Scene();
 		watermarkScene.background = new Spriterenderer(Color.red);
 		Entity watermark = Prefabs.ImageEntity(new Sprite("/resources/branding/logo.png"));
@@ -58,7 +61,8 @@ public class Display {
 		watermarkScene.addEntity(watermark);
 		watermarkScene.addEntity(text);
 
-		SceneManager.AddScene(watermarkScene);
+		if(!Sulfur.IGNORE_WATERMARK_SCENE)
+		SceneManager.SetScene(watermarkScene);
 
 		this.width = w;
 		this.height = h;
@@ -111,10 +115,12 @@ public class Display {
 	        renderer.repaint();
 	    }
 	    
-	    if(Input.isKeyDown(KeyEvent.VK_4)) {
+
+	    
+	    if(Input.isKeyDown(KeyEvent.VK_4) && Input.isKeyDown(KeyEvent.VK_ALT)) {
 	    	BufferedImage img = new BufferedImage(frame.getWidth(), frame.getHeight(), BufferedImage.TYPE_INT_RGB);
 	    	frame.paint(img.getGraphics());
-	    	File outputfile = new File("saved.png");
+	    	File outputfile = new File("Sulfur/Screenshots/" + System.nanoTime() + ".png");
 	    	try {
 				ImageIO.write(img, "png", outputfile);
 			} catch (IOException e) {

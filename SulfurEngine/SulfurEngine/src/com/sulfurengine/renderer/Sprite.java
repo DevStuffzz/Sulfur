@@ -12,6 +12,10 @@ import com.sulfurengine.util.Debug;
 public class Sprite {
 	private Image image;
 	
+	private Sprite() {
+		
+	}
+	
 	public Sprite(String loc) {
         this.image = AssetManager.getImage(loc);
     }
@@ -34,5 +38,13 @@ public class Sprite {
 	
 	public Image getImage() {
 		return this.image;
+	}
+
+
+
+	public static Sprite Generate(Image image) {
+		Sprite sprite = new Sprite();
+		sprite.setImage(image);
+		return sprite;
 	}
 }

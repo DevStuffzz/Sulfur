@@ -15,7 +15,7 @@ public class WatermarkScene extends Script {
     public void update(float dt) {
         time -= dt;
         if(time <=0.0f) {
-            SceneManager.SetScene(1);
+            SceneManager.SetScene(0);
         }
     }
 
